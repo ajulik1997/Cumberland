@@ -18,12 +18,12 @@
 ############################################################
 import decimal
 from decimal import Decimal as D
-from math import factorial, pi
+from math import factorial, pi, sqrt
 from time import clock
 ############################################################
 #						INITS
 ############################################################
-decimal.getcontext().prec = 64
+decimal.getcontext().prec = 32
 ############################################################
 #					OPTION PICKER
 ############################################################
@@ -37,12 +37,10 @@ while True:
 	except:
 		print("Invalid option, try again.")
 ############################################################
-#					HALLEY'S METHOD
+#				HALLEY'S METHOD FOR SOLVING R
 ############################################################
-err = D(1E-60)
-n_lim = D(1E2)
-
 def f(x,angle):
+	n_lim = D(1E2)
 	n = D(0)
 	ans = D(0)
 	while n<=n_lim:
@@ -55,6 +53,7 @@ def f(x,angle):
 	return ans
 	
 def fd(x,angle):
+	n_lim = D(1E2)
 	n = D(0)
 	ans = D(0)
 	while n<=n_lim:
@@ -66,6 +65,7 @@ def fd(x,angle):
 	return ans
 	
 def fdd(x,angle):
+	n_lim = D(1E2)
 	n = D(0)
 	ans = D(0)
 	while n<=n_lim:
@@ -77,6 +77,7 @@ def fdd(x,angle):
 	return ans
 
 def Halley(angle):
+	err = D(1E-30)
 	guess = D(0.8)
 	iter_lim = 1E4
 	iter = 0
@@ -93,6 +94,43 @@ def Halley(angle):
 		guess = guess_new
 	return guess
 ############################################################
+#						TOTAL AREA
+############################################################
+def TotalArea(angle):
+	ans = angle/D(2)
+	return ans
+############################################################
+#					TOTAL AREA OF TRIANGLES
+############################################################
+def TotalAreaofTrianlges(R):
+	i_lim = D(1E2)
+	i = D(0)
+	ans = D(0)
+	while i<=i_lim:
+		part1 = D((D(R)**i)/D(2))
+		part2 = D(sqrt(D(1)-((D(R)**(D(2)*i))/(D(4)))))
+		ans = ans + (part1 * part2)
+		i = i + 1
+	return ans
+############################################################
+#		RATIO OF TOTAL AREA OF TRIANGLES TO TOTAL AREA
+############################################################
+def RatioTriangletoTotal(triangle, total):
+	ans = D(triangle)/D(total)
+	return ans
+############################################################
+#		RATIO OF TOTAL CORD LENGTH TO TOTAL ARC LENGTH
+############################################################
+def RatioCordtoArc(R, angle):
+	i_lim = D(1E2)
+	i = D(0)
+	ans = D(0)
+	while i<=i_lim:
+		ans = ans + (D(R)**i)
+		i = i + 1
+	ans = ans/D(angle)
+	return ans
+############################################################
 #					OPTION 1 - MAIN	
 ############################################################
 if option == 1:
@@ -103,9 +141,27 @@ if option == 1:
 		except:
 			print("Invalid input, try again.")
 
-	time_1sym = clock()
-	result = Halley(angle)
-	print("Result:", result, "in", (clock() - time_1sym), "seconds")
+	time_1R = clock()
+	R = Halley(angle)
+	print("R =", R, "; [", (clock() - time_1R), "seconds ]")
+	
+	time_1TotalArea = clock()
+	totalArea = TotalArea(angle)
+	print("Total area =", totalArea, "; [", (clock() - time_1TotalArea), "seconds ]")
+	
+	time_1TotalAreaofTriangles = clock()
+	totalAreaofTriangles = TotalAreaofTrianlges(R)
+	print("Total area of trianlges =", totalAreaofTriangles, "; [", (clock() - time_1TotalAreaofTriangles), "seconds ]")
+	
+	time_1RatioTriangletoTotal = clock()
+	ratioTriangletoTotal = RatioTriangletoTotal(totalAreaofTriangles, totalArea)
+	print("Ratio of total triangle area to total area =", ratioTriangletoTotal, "; [", (clock() - time_1RatioTriangletoTotal), "seconds ]")
+	
+	time_1RatioCordtoArc = clock()
+	ratioCordtoArc = RatioCordtoArc(R, angle)
+	print("Ratio of total cord length to total arc length =", ratioCordtoArc, "; [", (clock() - time_1RatioCordtoArc), "seconds ]")
 ############################################################
-#					OPTION 1 - MAIN	
+#					OPTION 3 - MAIN	
 ############################################################
+if option == 3:
+	
