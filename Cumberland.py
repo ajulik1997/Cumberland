@@ -17,13 +17,16 @@
 #						IMPORTS
 ############################################################
 import decimal
-from decimal import Decimal as D
-from math import factorial, pi, sqrt
+from math import factorial, sqrt
 from time import clock
+from mpmath import mp
+from mpmath import mpf as D
 ############################################################
 #						INITS
 ############################################################
 decimal.getcontext().prec = 32
+mp.dps = 64
+pi = D(mp.pi)
 ############################################################
 #					OPTION PICKER
 ############################################################
@@ -78,7 +81,7 @@ def fdd(x,angle):
 
 def Halley(angle):
 	err = D(1E-30)
-	guess = D(0.8)
+	guess = InitialGuess(angle)
 	iter_lim = 1E4
 	iter = 0
 	while True:
@@ -93,6 +96,12 @@ def Halley(angle):
 			break
 		guess = guess_new
 	return guess
+############################################################
+#						INITIAL GUESS
+############################################################
+def InitialGuess(angle):
+	ans = D(1) - (D(1)/(angle))
+	return ans
 ############################################################
 #						TOTAL AREA
 ############################################################
@@ -140,7 +149,9 @@ if option == 1:
 			break
 		except:
 			print("Invalid input, try again.")
-
+	
+	print("Initial guess: ", InitialGuess(angle))
+	
 	time_1R = clock()
 	R = Halley(angle)
 	print("R =", R, "; [", (clock() - time_1R), "seconds ]")
@@ -164,4 +175,4 @@ if option == 1:
 #					OPTION 3 - MAIN	
 ############################################################
 if option == 3:
-	
+	print("lol")
