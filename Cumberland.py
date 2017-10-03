@@ -16,15 +16,15 @@
 ############################################################
 #						IMPORTS
 ############################################################
-import decimal
 from math import factorial, sqrt
 from time import clock
 from mpmath import mp
 from mpmath import mpf as D
+from numpy import linspace
+from matplotlib import pyplot as plt
 ############################################################
 #						INITS
 ############################################################
-decimal.getcontext().prec = 32
 mp.dps = 64
 pi = D(mp.pi)
 ############################################################
@@ -175,4 +175,30 @@ if option == 1:
 #					OPTION 3 - MAIN	
 ############################################################
 if option == 3:
-	print("lol")
+	while True:
+		try:
+			angle_min = D(float(input("Enter starting angle in radians: pi*"))*pi)
+			angle_max = D(float(input("Enter starting angle in radians: pi*"))*pi)
+			break
+		except:
+			print("Invalid input, try again.")
+	
+	angles = linspace(float(angle_min), float(angle_max), num=256, endpoint=True)
+	array_R = []
+	array_ratioTraingletoTotal = []
+	array_ratioCordtoArc = []
+	
+	for index, angle in enumerate(angles):
+		time_3 = clock()
+		array_R.append(Halley(angle))
+		array_ratioTraingletoTotal.append(RatioTriangletoTotal(TotalAreaofTrianlges(array_R[index]),TotalArea(angle)))
+		array_ratioCordtoArc.append(RatioCordtoArc(array_R[index],angle))
+		print("Processing angle", index, "out of", len(angles), "; finished in", clock()-time_3, "seconds")
+	
+	plt.figure()
+	plt.plot(angles, array_R, label="R")
+	plt.plot(angles, array_ratioTraingletoTotal, label="Triangle Area / Total Area")
+	plt.plot(angles, array_ratioCordtoArc, label="Cord Length / Arc Length")
+	plt.xlabel("Angle (radians)")
+	plt.legend()
+	plt.show()
